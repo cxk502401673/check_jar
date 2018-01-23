@@ -17,24 +17,34 @@ public class MyThread extends Thread {
     }
     public static void main(String[] args)
     {
-//        Map<String,Object> map1=new HashMap<String,Object>();
-//        map1.put("key","v1");
-//        Thread thread1 = new MyThread("world",map1);
-//        thread1.start();
-        for(int i=0;i<100;i++){
+
+        for(int i=0;i<2;i++){
             Map<String,Object> map2=new HashMap<String,Object>();
             map2.put("key"+i,"v"+i);
             Thread thread2 = new MyThread(i+"",map2);
             thread2.start();
         }
-
+        System.out.println("子线程开启");
+        //获取man线程
+        Thread main = Thread.currentThread();
+        System.out.println(main.getName());
+        main.interrupt();
+        System.out.println("main线程已经退出了，但是不影响其他线程运行!");
     }
 
 
     private void taskExec(String name,Map<String,Object> map){
-        System.out.println(name);
-        System.out.println(map.get("key"));
-        System.out.println("---------------");
+       for(int i=0;i<3;i++){
+       // while(true){
+            System.out.println(name);
+            System.out.println(map.get("key"));
+            System.out.println("---------------");
+            try {
+                Thread.sleep(1000l);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 
     }
