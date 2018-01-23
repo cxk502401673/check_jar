@@ -1,12 +1,18 @@
 package com.yuanwang.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesUtils {
-	/**
+    private static Logger logger  =  Logger.getLogger(PropertiesUtils. class );
+
+
+
+    /**
 	 *  获取项目信息,通过配置文件方式,配置项目名称，项目版本号
 	 * */
 	public static String readProInfo(String path,String proKey,String fileName){
@@ -18,6 +24,7 @@ public class PropertiesUtils {
             keyValue = pro.getProperty(proKey);
         }
         catch(Exception e){
+            logger.error(e);
         }
         return keyValue;
 	}

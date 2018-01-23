@@ -221,6 +221,7 @@ public class SQLDetailDao {
                 return null;
             }
         } catch (Exception e) {
+            logger.error(e);
             return null;
         }
     }

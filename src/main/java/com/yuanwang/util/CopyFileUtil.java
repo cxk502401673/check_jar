@@ -1,5 +1,7 @@
 package com.yuanwang.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,13 +11,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class CopyFileUtil {
-
+	private static Logger logger  =  Logger.getLogger(CopyFileUtil. class );
 	/**
 	 * 复制单个文件
 	 * 
 	 * @param srcFileName
 	 *            待复制的文件名
-	 * @param descFileName
+	 *
 	 *            目标文件名
 	 * @param overlay
 	 *            如果目标文件存在，是否覆盖
@@ -65,15 +67,19 @@ public class CopyFileUtil {
 			}
 			return true;
 		} catch (FileNotFoundException e) {
+			logger.error(e);
 			return false;
 		} catch (IOException e) {
+			logger.error(e);
 			return false;
 		} finally {
 			try {
-				if (out != null)
+				if (out != null) {
 					out.close();
-				if (in != null)
+				}
+				if (in != null) {
 					in.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

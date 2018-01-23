@@ -1,10 +1,16 @@
 package com.yuanwang.util;
 
+import org.apache.log4j.Logger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateFormateUtil {
+	private static Logger logger  =  Logger.getLogger(DateFormateUtil. class );
+
+
+
 	/**
 	 * 格式话时间 "yyyy-MM-dd hh:mm:ss"
 	 * 
@@ -26,8 +32,7 @@ public class DateFormateUtil {
 			format.setLenient(false);
 			format.parse(str);
 		} catch (ParseException e) {
-			// e.printStackTrace();
-			// 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+			logger.error(e);
 			convertSuccess = false;
 		}
 		return convertSuccess;

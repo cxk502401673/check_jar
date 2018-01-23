@@ -7,15 +7,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 public class MyFileUtils {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(MyFileUtils.class);
-	
-	
+	private static Logger logger  =  Logger.getLogger(MyFileUtils. class );
+
 	public static String getRootPath(){
 		return MyFileUtils.class.getClassLoader().getResource("").getPath();
 	}
@@ -34,8 +32,9 @@ public class MyFileUtils {
 			try {
 				String rootPath =getRootPath();
 				File dir = new File(rootPath + File.separator + "tmpFiles");
-				if (!dir.exists())
+				if (!dir.exists()) {
 					dir.mkdirs();
+				}
 				serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
 				in = file.getInputStream();
 				out = new FileOutputStream(serverFile);
@@ -46,8 +45,9 @@ public class MyFileUtils {
 				}
 				out.close();
 				in.close();
-				LOGGER.info("Server File Location=" + serverFile.getAbsolutePath());
+				logger.info("Server File Location=" + serverFile.getAbsolutePath());
 			} catch (Exception e) {
+				logger.error(e);
 			} finally {
 				if (out != null) {
 					out.close();

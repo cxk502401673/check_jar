@@ -114,6 +114,7 @@ public class PTP_CHECK {
                 inputStream.close(); // 关闭流
                 bf.close();
             } catch (Exception e) {
+                logger.error(e);
             }
             int index=lines.indexOf("BMCK\\BMCKAgent.exe");
             if(index!=-1){
@@ -179,13 +180,13 @@ public class PTP_CHECK {
             o.write(content.getBytes("GBK"));
             o.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             if (mm != null) {
                 try {
                     mm.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e);
                 }
 
             }
@@ -202,11 +203,13 @@ public class PTP_CHECK {
         try {
             socket.connect(new InetSocketAddress(host, port),500);
         } catch (IOException e) {
+            logger.error(e);
             return false;
         } finally {
             try {
                 socket.close();
             } catch (IOException e) {
+                logger.error(e);
             }
         }
         return true;

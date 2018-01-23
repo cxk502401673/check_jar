@@ -1,6 +1,12 @@
 package com.yuanwang.util;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 public class JarToolUtil {
+    private static Logger logger  =  Logger.getLogger(JarToolUtil. class );
+
+
+
     /**
      * 获取jar绝对路径
      *
@@ -58,6 +64,7 @@ public class JarToolUtil {
         }
         catch (java.io.UnsupportedEncodingException e)
         {
+            logger.error(e);
             return null;
         }
         return new File(path);

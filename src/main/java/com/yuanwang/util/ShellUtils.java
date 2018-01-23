@@ -1,12 +1,13 @@
 package com.yuanwang.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ShellUtils {
-
-
+    private static Logger logger  =  Logger.getLogger(ShellUtils. class );
 
 
 
@@ -38,7 +39,7 @@ public class ShellUtils {
                 System.out.println("ERR line:" + line);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             try {
                 if (stdISR != null) {

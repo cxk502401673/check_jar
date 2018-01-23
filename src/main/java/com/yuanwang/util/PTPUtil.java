@@ -2,6 +2,7 @@ package com.yuanwang.util;
 import com.yuanwang.bean.PTPResult;
 import com.yuanwang.bean.YW_PACKET;
 import lombok.Data;
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 @Data
 public class PTPUtil {
+    private static Logger logger  =  Logger.getLogger(PTPUtil. class );
     /**
      * 点对点连接IP
      */
@@ -112,6 +114,7 @@ public class PTPUtil {
                 return "创建文件"+path+"失败";
             }
         } catch (IOException e2) {
+            logger.error(e2);
             return "创建文件"+path+"失败："+e2.getMessage();
         }
         FileOutputStream fos=null;
@@ -133,10 +136,12 @@ public class PTPUtil {
             }
             fos.close();
         } catch (Exception e) {
+            logger.error(e);
             if(fos!=null){
                 try {
                     fos.close();
                 } catch (IOException e1) {
+                    logger.error(e);
                     return "文件写入失败后，关闭文件失败："+e1.getMessage();
                 }
             }
@@ -199,6 +204,7 @@ public class PTPUtil {
             }
             socket.close();
         } catch (Exception e) {
+            logger.error(e);
             ptp_result.setErrMsg("UDP 命令"+this.cmd_str+"出错:"+e.getMessage());
         }
         return ptp_result;
@@ -278,12 +284,14 @@ public class PTPUtil {
             is.close();
             socket.close();
         } catch (Exception e) {
+            logger.error(e);
             ptp_result.setErrMsg(e.getMessage());
         } finally{
             if(os!=null){
                 try {
                     os.close();
                 } catch (IOException e) {
+                    logger.error(e);
                     ptp_result.setErrMsg("OutputStream关闭失败："+e.getMessage());
                 }
             }
@@ -291,6 +299,7 @@ public class PTPUtil {
                 try {
                     is.close();
                 } catch (IOException e) {
+                    logger.error(e);
                     ptp_result.setErrMsg("InputStream关闭失败："+e.getMessage());
                 }
             }
@@ -298,6 +307,7 @@ public class PTPUtil {
                 try {
                     socket.close();
                 } catch (IOException e) {
+                    logger.error(e);
                     ptp_result.setErrMsg("socket关闭失败："+e.getMessage());
                 }
             }

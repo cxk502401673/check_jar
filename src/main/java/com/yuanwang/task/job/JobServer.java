@@ -19,7 +19,7 @@ public class JobServer implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("我是定时执行的任务");
+            logger.info("我是定时执行的任务");
             ExecutorService executorService = Executors.newCachedThreadPool();
 
              conn= DBCPUtil.getLowConnection();
@@ -36,8 +36,8 @@ public class JobServer implements Runnable{
                 System.out.print(rs.getObject(6)+"\t"); //共输出要显示的字段名信息
             }
     } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e );
+            
+            logger.error(e);
         }finally {
             try {
                 rs.close();
@@ -45,7 +45,7 @@ public class JobServer implements Runnable{
                 conn.close();
             } catch (SQLException e) {
                 logger.error(e );
-                e.printStackTrace();
+                
             }
 
         }

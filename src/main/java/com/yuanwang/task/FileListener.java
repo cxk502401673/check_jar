@@ -44,8 +44,8 @@ public class FileListener extends FileAlterationListenerAdaptor{
                 e.printStackTrace();
             }
         }
-        System.out.println("数据同步完成");
 
+        log.info("数据同步完成" );
 
     }
 

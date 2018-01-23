@@ -34,7 +34,7 @@ public class DBCPUtil {
             properties.load(in);
         }catch(IOException e){
             logger.error(e);
-            e.printStackTrace();
+           
         }
 
         try{
@@ -54,7 +54,7 @@ public class DBCPUtil {
             }
             }catch(Exception e){
                 logger.error(e);
-                e.printStackTrace();
+               
             }
 
 
@@ -82,7 +82,7 @@ public class DBCPUtil {
             lowDataSource=BasicDataSourceFactory.createDataSource(lowproperties);
         } catch (Exception e) {
             logger.error(e);
-            e.printStackTrace();
+           
         }
 
     }
@@ -96,12 +96,12 @@ public class DBCPUtil {
         try{
             connection = dataSource.getConnection();
         }catch(SQLException e){
-            e.printStackTrace();
+           
         }
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            e.printStackTrace();
+           
             logger.error(e);
         }
         return connection;
@@ -116,13 +116,13 @@ public class DBCPUtil {
         try{
             connection = lowDataSource.getConnection();
         }catch(SQLException e){
-            e.printStackTrace();
+           
         }
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             logger.error(e);
-            e.printStackTrace();
+           
         }
         return connection;
     }
