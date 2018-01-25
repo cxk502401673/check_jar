@@ -27,11 +27,11 @@ public class MyWebConstant {
 	public static final String PORT="port";
 	public static final String DATANASENAME="databaeName";
 
-	public static final String LOWUSERNAME="low_username";
-	public static final String LOWPASSWORD="low_password";
-	public static final String LOWIP="low_ip";
-	public static final String LOWPORT="low_port";
-	public static final String LOWDATANASENAME="low_databaeName";
+//	public static final String LOWUSERNAME="low_username";
+//	public static final String LOWPASSWORD="low_password";
+//	public static final String LOWIP="low_ip";
+//	public static final String LOWPORT="low_port";
+//	public static final String LOWDATANASENAME="low_databaeName";
 
 
 	//数据库类型
@@ -40,4 +40,11 @@ public class MyWebConstant {
 	public static final String MYSQL="3";
 	public static final String DBTYPE="type";
 	public static final String LOWDBTYPE="low_type";
+
+
+	/**
+	 * 线程池数量
+	 */
+
+	public static final String THREADPOOlNUM="threadPoolNum";
 }

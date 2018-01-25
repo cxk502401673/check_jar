@@ -15,6 +15,7 @@ public class TaskSchedule {
      * 本次任务执行完成后，需要延迟设定的延迟时间，才会执行新的任务
      */
     public static void executeFixedDelay(Long period) {
+        //开启1个定期执行任务线程
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleWithFixedDelay(
                 new JobServer(),

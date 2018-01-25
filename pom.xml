@@ -203,9 +203,9 @@
                             -->
                             <addClasspath>true</addClasspath>
                             <!--
-                               生成的manifest中classpath的前缀，因为要把第三方jar放到lib目录下，所以classpath的前缀是lib/
+                               生成的manifest中classpath的前缀，因为要把第三方jar放到ywLib目录下，所以classpath的前缀是ywLib/
                            -->
-                            <classpathPrefix>lib/</classpathPrefix>
+                            <classpathPrefix>ywLib/</classpathPrefix>
                             <!--
                                 应用的main class
                             -->

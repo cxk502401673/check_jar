@@ -3,7 +3,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <!-- 最终打包成一个用于发布的zip文件 -->
     <formats>
-        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
     <!-- Adds dependencies to zip package under lib directory -->
@@ -13,7 +13,7 @@
                不使用项目的artifact，第三方jar不要解压，打包进zip文件的lib目录
            -->
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>ywLib</outputDirectory>
             <unpack>false</unpack>
         </dependencySet>
     </dependencySets>
@@ -27,8 +27,8 @@
 
         <!-- 把项目的配置文件，打包进zip文件的config目录 -->
         <fileSet>
-            <directory>${project.build.directory}/conf</directory>
-            <outputDirectory>/conf</outputDirectory>
+            <directory>${project.build.directory}/ywConf</directory>
+            <outputDirectory>/ywConf</outputDirectory>
             <includes>
                 <include>*.*</include>
 

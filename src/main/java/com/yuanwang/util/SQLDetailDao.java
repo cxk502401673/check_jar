@@ -43,7 +43,8 @@ public class SQLDetailDao {
                 try {
                     conn.rollback();
                 } catch (SQLException e1) {
-                    e1.printStackTrace();
+                    logger.error(e1);
+
                 }
             }
         }finally {
@@ -89,7 +90,8 @@ public class SQLDetailDao {
                 try {
                     conn.rollback();
                 } catch (SQLException e1) {
-                    e1.printStackTrace();
+                    logger.error(e1);
+
                 }
             }
         }finally {
@@ -131,11 +133,13 @@ public class SQLDetailDao {
 
         } catch (Exception e) {
             logger.error(e);
+
             if(conn!=null){
                 try {
                     conn.rollback();
                 } catch (SQLException e1) {
-                    e1.printStackTrace();
+                    logger.error(e1);
+
                 }
             }
         }finally {
@@ -178,15 +182,22 @@ public class SQLDetailDao {
                 conn.close();
             } catch (SQLException e) {
                 logger.error(e);
+                if(conn!=null){
+                    try {
+                        conn.rollback();
+                    } catch (SQLException e1) {
+                        logger.error(e1);
+
+                    }
+                }
             }
         }
         return row;
     }
 
 
-    /********
-     * 获取所有的检查项
-     *
+    /**
+     *  获取下级数据库连接 关闭事物自动提交
      * @param ip
      * @param port
      * @param username
@@ -194,6 +205,7 @@ public class SQLDetailDao {
      * @param databaseName
      * @param type
      * @return
+     * @throws Exception
      */
     public static Connection getConnection(String ip, String port, String username, String password, String databaseName, int type) throws Exception{
 
@@ -243,9 +255,11 @@ public class SQLDetailDao {
                 dataSource.setMinIdle(10);
 
                Connection conn=dataSource.getConnection();
+                conn.setAutoCommit(false);
                 return conn;
             }else{
                 Connection conn=dataSource.getConnection();
+                conn.setAutoCommit(false);
                 return conn;
             }
         }else{
