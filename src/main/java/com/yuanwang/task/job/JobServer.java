@@ -26,7 +26,7 @@ public class JobServer implements Runnable {
 
                 String numString=Config.getString(MyWebConstant.THREADPOOlNUM,String.valueOf(SystemInfoUtil.cupCore() * 2));
                 Integer number=Integer.valueOf(numString);
-                ExecutorService executorService = Executors.newFixedThreadPool(number==0?SystemInfoUtil.cupCore() * 2:number);
+                executorService = Executors.newFixedThreadPool(number==0?SystemInfoUtil.cupCore() * 2:number);
             }
 
 
