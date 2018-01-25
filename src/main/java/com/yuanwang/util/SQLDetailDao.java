@@ -1,5 +1,6 @@
 package com.yuanwang.util;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -9,18 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 public class SQLDetailDao {
-   private static Logger logger  =  Logger.getLogger(SQLDetailDao. class );
+     private static Logger logger  =  Logger.getLogger(SQLDetailDao. class );
+     private static BasicDataSource dataSource=new BasicDataSource();
+
     /*******
      * 返回单个值
      ************/
     public static Object getForObject(Connection conn, String sql, Object... objects) {
         Object object = null;
+        PreparedStatement statement=null;
+        ResultSet resultSet=null;
         try {
-            PreparedStatement statement = conn.prepareStatement(sql);
+            statement= conn.prepareStatement(sql);
             for (int i = 0; i < objects.length; i++) {
                 statement.setObject(i + 1, objects[i]);
             }
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             int columnCount = resultSetMetaData.getColumnCount(); //获取返回的列数
             while (resultSet.next()) {
@@ -30,11 +35,25 @@ public class SQLDetailDao {
                     object = value;
                 }
             }
-            statement.close();
-            resultSet.close();
+
         } catch (Exception e) {
             object = null;
             logger.error(e);
+            if(conn!=null){
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }finally {
+            try {
+                statement.close();
+                resultSet.close();
+                conn.close();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
         return object;
     }
@@ -44,12 +63,14 @@ public class SQLDetailDao {
      **********/
     public static List<Map<String, Object>> getList(Connection conn, String sql, Object... objects) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        PreparedStatement statement=null;
+        ResultSet resultSet=null;
         try {
-            PreparedStatement statement = conn.prepareStatement(sql);
+             statement = conn.prepareStatement(sql);
             for (int i = 0; i < objects.length; i++) {
                 statement.setObject(i + 1, objects[i]);
             }
-            ResultSet resultSet = statement.executeQuery();
+              resultSet= statement.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             int columnCount = resultSetMetaData.getColumnCount(); //获取返回的列数
             while (resultSet.next()) {
@@ -61,10 +82,24 @@ public class SQLDetailDao {
                 }
                 list.add(objMap);
             }
-            statement.close();
-            resultSet.close();
+
         } catch (Exception e) {
             logger.error(e);
+            if(conn!=null){
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }finally {
+            try {
+                statement.close();
+                resultSet.close();
+                conn.close();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
         return list;
     }
@@ -73,26 +108,44 @@ public class SQLDetailDao {
      * 返回map一个对象
      *****/
     public static Map<String, Object> getMap(Connection conn, String sql, Object... objects) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         try {
-            PreparedStatement statement = conn.prepareStatement(sql);
+             statement = conn.prepareStatement(sql);
             for (int i = 0; i < objects.length; i++) {
                 statement.setObject(i + 1, objects[i]);
             }
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            int columnCount = resultSetMetaData.getColumnCount(); //获取返回的列数
+            //获取返回的列数
+            int columnCount = resultSetMetaData.getColumnCount();
             while (resultSet.next()) {
                 for (int i = 0; i < columnCount; i++) {
-                    String name = resultSetMetaData.getColumnName(i + 1).toLowerCase();//获取返回的列名
+                    //获取返回的列名
+                    String name = resultSetMetaData.getColumnName(i + 1).toLowerCase();
                     Object value = resultSet.getObject(i + 1);
                     map.put(name, value);
                 }
             }
-            statement.close();
-            resultSet.close();
+
         } catch (Exception e) {
             logger.error(e);
+            if(conn!=null){
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }finally {
+            try {
+                resultSet.close();
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
         return map;
     }
@@ -102,42 +155,34 @@ public class SQLDetailDao {
      ****/
     public static int sqlUpdate(Connection conn, String sql, Object... objects) {
         int row = 0;
+        PreparedStatement statement=null;
         try {
-            PreparedStatement statement = conn.prepareStatement(sql);
+             statement = conn.prepareStatement(sql);
             for (int i = 0; i < objects.length; i++) {
                 statement.setObject(i + 1, objects[i]);
             }
-
             row = statement.executeUpdate();
-            statement.close();
+
         } catch (Exception e) {
             logger.error(e);
+            if(conn!=null){
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }finally {
+            try {
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
         return row;
     }
 
-    //批量插入
-    public static void sqlUpdate2(Connection conn, String sql, Object... objects) {
-        int row[] = null;
-        try {
-            PreparedStatement statement = conn.prepareStatement(sql);
-            conn.setAutoCommit(false);//1,首先把Auto commit设置为false,不让它自动提交
-            for (int i = 0; i < objects.length; i++) {
-                statement.setObject(i + 1, objects[i]);
-
-            }
-            statement.addBatch();
-            row = statement.executeBatch();
-            conn.setAutoCommit(true);//1,首先把Auto commit设置为false,不让它自动提交
-            //row=statement.executeUpdate();
-            conn.commit();
-            statement.close();
-
-        } catch (Exception e) {
-            logger.error(e);
-        }
-        //return row;
-    }
 
     /********
      * 获取所有的检查项
@@ -150,45 +195,58 @@ public class SQLDetailDao {
      * @param type
      * @return
      */
-    public static Connection getConnection(String ip, String port, String username, String password, String databaseName, int type) {
+    public static Connection getConnection(String ip, String port, String username, String password, String databaseName, int type) throws Exception{
+
         boolean ishost=PTP_CHECK.isHostConnectable(ip, Integer.parseInt(port));
         if(ishost){
-            try {
+            if(dataSource==null){
                 String className = "";
                 // 数据库驱动
-                if (type == 1) {// Oracle
+                if (type == 1) {
                     className = "oracle.jdbc.OracleDriver";
-                } else if (type == 2) {// sqlServer
+                } else if (type == 2) {
                     className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-                } else if (type == 3) {// mysql
+                } else if (type == 3) {
                     className = "com.mysql.jdbc.Driver";
                 }
                 Class.forName(className);
-                try {
-                    Connection conn;
-                    String url = "";
-                    String userName = "";
-                    // 数据库访问链接
-                    if (type == 1) {// Oracle
-                        url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + databaseName;
-                        userName = username;
-                    } else if (type == 2) {// sqlServer
-                        url = "jdbc:sqlserver://" + ip + ":" + port + ";databaseName=" + databaseName;
-                        userName = username;
-                    } else if (type == 3) {// mysql
-                        url = "jdbc:mysql://" + ip + ":" + port + "/" + databaseName;
-                        userName = username;
-                    }
-                    // 数据库连接超时控制
-                    DriverManager.setLoginTimeout(5);// 秒
-                    conn = DriverManager.getConnection(url, userName, password);
-                    return conn;
-                } catch (Exception e) {
-                    logger.error(e);
-                    return null;
+                String url = "";
+                String userName = "";
+                // 数据库访问链接
+                if (type == 1) {
+                    url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + databaseName;
+                    userName = username;
+                } else if (type == 2) {
+                    url = "jdbc:sqlserver://" + ip + ":" + port + ";databaseName=" + databaseName;
+                    userName = username;
+                } else if (type == 3) {
+                    url = "jdbc:mysql://" + ip + ":" + port + "/" + databaseName;
+                    userName = username;
                 }
-            } catch (Exception e) {
-                return null;
+                dataSource=new BasicDataSource();
+                //数据库驱动
+                dataSource.setDriverClassName(className);
+                dataSource.setUsername(username);
+                dataSource.setPassword(password);
+                //"jdbc:mysql://localhost:3306/yecheck?useUnicode=true&characterEncoding=utf-8&useSSL=false"
+                //连接url
+                dataSource.setUrl(url);
+                // 初始的连接数；
+                dataSource.setInitialSize(10);
+                //最大连接数
+                dataSource.setMaxTotal(100);
+                // 设置最大空闲连接
+                dataSource.setMaxIdle(80);
+                // 设置最大等待时间
+                dataSource.setMaxWaitMillis(6000);
+                // 设置最小空闲连接
+                dataSource.setMinIdle(10);
+
+               Connection conn=dataSource.getConnection();
+                return conn;
+            }else{
+                Connection conn=dataSource.getConnection();
+                return conn;
             }
         }else{
             logger.error( "getConnection-->" +ip+":"+port+"端口连接失败！");
@@ -197,32 +255,5 @@ public class SQLDetailDao {
 
     }
 
-    /***
-     * 获取数据库连接
-     *
-     * @param className
-     * @param url
-     * @param userName
-     * @param passWord
-     * @return
-     */
-    public Connection getConnection(String className, String url, String userName, String passWord) {
-        logger.info("getConnection"+ className + "===" + url + "===" + userName + "===" + passWord);
 
-        try {
-            try {
-                Class.forName(className);
-                // 数据库连接超时控制
-                DriverManager.setLoginTimeout(2);// 秒
-                Connection conn = DriverManager.getConnection(url, userName, passWord);
-                return conn;
-            } catch (Exception e) {
-                logger.error("getConnection-->" + e.getMessage());
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            return null;
-        }
-    }
 }
